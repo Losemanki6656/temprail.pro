@@ -29,7 +29,7 @@ class HomeController extends Controller
     {
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
 
-        $temps = Temp::all();
+        $temps = Temp::with('sector')->get();
 
         $sectors = Sector::
         where('organization_id',$org_id)->get();

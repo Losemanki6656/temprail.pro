@@ -88,7 +88,7 @@
 
                                         @foreach ($temps as $temp)
                                             <tr>
-                                                <td><strong>{{ $temp->okolotka($temp->okolotok_id) }}</strong></td>
+                                                <td><strong>{{ $temp->sector->name}}</strong></td>
                                                 <td>{{ $temp->temp }} °C </td>
                                                 <td>{{ $temp->updated_at->format('Y-m-d') }} </td>
                                                 <td>{{ $temp->updated_at->format('H:i:s') }} </td>
