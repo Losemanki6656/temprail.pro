@@ -71,20 +71,20 @@ class HomeController extends Controller
         }
 
         $series = [];
-        $okolotki = [];
+        $sectors = [];
         $tempur = 0;
-        foreach ($temps->groupBy('okolotok_id') as $key => $value) {
+        foreach ($temps->groupBy('sector_id') as $key => $value) {
             for($i = 0; $i <= 23; $i++) {
                 $series[$key][$i] = 0;
-                $okolotki[$key] = Sector::find($key)->name;
+                $sectors[$key] = Sector::find($key)->name;
             }
         }
         foreach ($temps as $key => $temp) {
             $y = number_format($temp->created_at->format('H'));
-            $series[$temp->okolotok_id][$y] = $temp->temp;
+            $series[$temp->sector_id][$y] = $temp->temp;
         }
 
-        return view('statistic', compact( 'okolotki','categories', 'series'));
+        return view('statistic', compact( 'sectors','categories', 'series'));
     }
 
     public function main()

@@ -157,6 +157,5 @@
     @yield('scripts')
 </body>
 
-<!-- Mirrored from lite.codedthemes.com/gradient-able/bootstrap/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Nov 2021 12:04:49 GMT -->
 
 </html>
