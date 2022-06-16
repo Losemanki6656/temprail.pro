@@ -26,47 +26,47 @@
                     </div>
                 </div>
                 <table>
-                  <thead>
-                    <th width="320px">
-                    </th>
-                    <th width="50px">
-                    </th>
-                    <th width="170px">
-                    </th>
-                    <th width="30px">
-                    </th>
-                    <th width="170px">
-                    </th>
-                    <th width="170px">
-                    </th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                          <select class="js-example-basic-single" id="select_done" name="sel_done" style="width: 300px">
-                            <option value=" ">All</option>
-                            @foreach ($sectors as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                        </td>
-                        <td>From</td>
-                        <td>
-                            <input type="date" class="form-control" style="width: 140px;" name="period"
-                                value="{{ request('period') ?? now()->format('Y-m-d') }}"
-                                class="form-control">
-                        </td>
-                        <td>To</td>
-                        <td>
-                            <input type="date" class="form-control" style="width: 140px;" name="sana"
-                                value="{{ request('sana') ?? now()->format('Y-m-d') }}"
-                                class="form-control">
-                        </td>
-                        <td>
-                          <button class="btn btn-primary" type="submit"> <i class="fas fa-filter"></i> Filter</button>
-                        </td>
-                    </tr>
-                </tbody>
+                    <thead>
+                        <th width="320px">
+                        </th>
+                        <th width="50px">
+                        </th>
+                        <th width="200px">
+                        </th>
+                        <th width="30px">
+                        </th>
+                        <th width="200px">
+                        </th>
+                        <th width="170px">
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select class="js-example-basic-single" id="select_done" name="sel_done"
+                                    style="width: 300px">
+                                    <option value=" ">All</option>
+                                    @foreach ($sectors as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>From</td>
+                            <td>
+                                <input type="date" class="form-control" style="width: 170px;" name="period"
+                                    value="{{ request('period') ?? now()->format('Y-m-d') }}" class="form-control">
+                            </td>
+                            <td>To</td>
+                            <td>
+                                <input type="date" class="form-control" style="width: 170px;" name="sana"
+                                    value="{{ request('sana') ?? now()->format('Y-m-d') }}" class="form-control">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" type="submit"> <i class="fas fa-filter"></i>
+                                    Filter</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
 
@@ -78,6 +78,7 @@
                                 <table class="table table-hover m-b-0">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th><span>Sectors</span></th>
                                             <th><span>Temprature <a class="help"></a></span></th>
                                             <th><span>Date <a class="help"></a></span></th>
@@ -88,7 +89,8 @@
 
                                         @foreach ($temps as $temp)
                                             <tr>
-                                                <td><strong>{{ $temp->sector->name}}</strong></td>
+                                                <td>{{(($temps->currentPage() * 10) - 10) + $loop->index + 1}}</td>
+                                                <td><strong>{{ $temp->sector->name }}</strong></td>
                                                 <td>{{ $temp->temp }} °C </td>
                                                 <td>{{ $temp->updated_at->format('Y-m-d') }} </td>
                                                 <td>{{ $temp->updated_at->format('H:i:s') }} </td>
@@ -98,6 +100,31 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            <div class="row container">
+                                <div class="col d-flex justify-content mt-3">
+                                    <h6 class="mt-2 mr-2">Show</h6>
+                                    <select class="form-control" style="width: 80px" name="select_paginate" id="select_paginate">
+                                        <option value="10" @if (request('paginate') == 10) selected @endif>10</option>
+                                        <option value="50" @if (request('paginate') == 50) selected @endif>50</option>
+                                        <option value="100" @if (request('paginate') == 100) selected @endif>100</option>
+                                        <option value="{{$temps->count()}}" @if (request('paginate') == $temps->count()) selected @endif>All</option>
+                                    </select> <h6 class="mt-2 ml-2">entries</h6>
+                                </div>
+                                <div class="col d-flex justify-content-end mt-3">
+                                    {{ $temps->withQueryString()->links() }}
+                                </div>
+                                @push('scripts')
+                                    <script>
+                                        $('#select_paginate').change(function (e) {
+                                            let paginate = $(this).val();
+                                            let url = '{{ route('temps') }}';
+                                            window.location.href = `${url}?paginate=${paginate}`;
+                                        })
+                                    </script>                       
+                                @endpush
+                            </div>
+
                         </div>
                     </div>
 

@@ -40,17 +40,18 @@ class HomeController extends Controller
         ]);
     }
 
-    public function temps()
+    public function temps(Request $request)
     {
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
         
-        $temps = Temp::all();
+        $temps = Temp::where('organization_id', $org_id)->with('sector');
 
         $sectors = Sector::
         where('organization_id',$org_id)->get();
 
+        if($request->paginate) $paginate = $request->paginate; else $paginate = 10;
         return view('temps',[
-            'temps' => $temps,
+            'temps' => $temps->paginate($paginate),
             'sectors' => $sectors
         ]);
     }

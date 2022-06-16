@@ -54,7 +54,7 @@
     </div>
 @endsection
 
-@section('after_scripts')
+@section('scripts')
     <script>
         let series = [
             @foreach ($series as $key => $seria)
