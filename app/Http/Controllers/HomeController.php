@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Temp;
 use App\Models\UserOrganization;
 use App\Models\Sector;
+use App\Models\Organization;
 use Auth;
 
 class HomeController extends Controller
@@ -27,7 +28,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $organizations = Organization::all();
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
+        
+        $maxTemps = Temp::orderBy('temp','asc')->get();
 
         $temps = Temp::with('sector')->get();
 
@@ -36,7 +40,9 @@ class HomeController extends Controller
 
         return view('home',[
             'temps' => $temps,
-            'sectors' => $sectors
+            'sectors' => $sectors,
+            'organizations' => $organizations,
+            'maxTemps' => $maxTemps
         ]);
     }
 
@@ -44,7 +50,18 @@ class HomeController extends Controller
     {
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
         
-        $temps = Temp::where('organization_id', $org_id)->with('sector');
+        $temps = Temp::query()
+        ->where('organization_id', $org_id)
+        ->when(request('sector_id'), function ( $query, $sector_id) {
+            return $query->where('sector_id', $sector_id);
+
+        })->when(request('date1'), function ( $query, $date1) {
+            return $query->where('created_at','>=', $date1);
+
+        })->when(request('date2'), function ( $query, $date2) {
+            return $query->where('created_at','<=', $date2);
+
+        })->with('sector');
 
         $sectors = Sector::
         where('organization_id',$org_id)->get();
@@ -56,14 +73,13 @@ class HomeController extends Controller
         ]);
     }
 
-    public function static()
+    public function static(Request $request)
     {
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
+        if($request->date_stat) $date_stat = $request->date_stat; else $date_stat = now()->format('Y-m-d');
 
-        $temps = Temp::
-        where('organization_id', $org_id)
-        ->whereDate('created_at','=',now()->toDateString('Y-m-d'))
-        ->get();
+        $temps = Temp::where('organization_id', $org_id)
+        ->whereDate('created_at','=',$date_stat)->get();
 
         $categories = [];
         for($i = 0; $i <= 23; $i++) {

@@ -43,17 +43,11 @@
                                     class="feather icon-pie-chart text-success"></i></span><span
                                 class="pcoded-mtext">Statistics</span></a>
                     </li>
-                    <li class="nav-item pcoded-menu-caption">
-                        <label>Data</label>
-                    </li>
-
+                    @can('admin')
                     <li class="nav-item">
                         <a href="{{ route('main') }}" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-box"></i></span><span class="pcoded-mtext">Sectors</span></a>
-                    </li>
-
-
-
+                    </li> 
                     <li class="nav-item pcoded-menu-caption">
                         <label>Setting</label>
                     </li>
@@ -61,6 +55,12 @@
                         <a class="nav-link "><span class="pcoded-micon"><i
                                     class="bi bi-gear"></i></span><span class="pcoded-mtext">Setting</span></a>
                     </li>
+                    @endcan
+                    
+
+
+
+                    
 
                 </ul>
             </div>

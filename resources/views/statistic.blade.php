@@ -12,10 +12,12 @@
                             <i class="feather icon-more-horizontal"></i>
                         </button>
                         <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
-                            <li class="dropdown-item full-card"><a href="#!"><span><i class="feather icon-maximize"></i>
+                            <li class="dropdown-item full-card"><a href="#!"><span><i
+                                            class="feather icon-maximize"></i>
                                         maximize</span><span style="display:none"><i class="feather icon-minimize"></i>
                                         Restore</span></a></li>
-                            <li class="dropdown-item minimize-card"><a href="#!"><span><i class="feather icon-minus"></i>
+                            <li class="dropdown-item minimize-card"><a href="#!"><span><i
+                                            class="feather icon-minus"></i>
                                         collapse</span><span style="display:none"><i class="feather icon-plus"></i>
                                         expand</span></a></li>
                             <li class="dropdown-item reload-card"><a href="#!"><i class="feather icon-refresh-cw"></i>
@@ -27,10 +29,13 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label for="otdateinput">Select Date</label>
-                        <input type="date" id="dateinput" value="" required>
-                        <button type="button" class="btn btn-primary" id="dates" ><i
-                                class="mr-2 bi bi-graph-up"></i>Preview</button>
+                        <form action="{{route('static')}}" method="get">
+                            <label>Select Date</label>
+                            <label for=""><input type="date" class="form-control" name="date_stat" value="{{request('date_stat')}}"
+                                    required></label>
+                            <label> <button type="submit" class="btn btn-primary"><i
+                                        class="mr-2 bi bi-graph-up"></i>Preview</button></label>
+                        </form>
                     </div>
                 </div>
 

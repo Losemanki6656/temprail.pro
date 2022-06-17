@@ -41,31 +41,37 @@
                         </th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <select class="js-example-basic-single" id="select_done" name="sel_done"
-                                    style="width: 300px">
-                                    <option value=" ">All</option>
-                                    @foreach ($sectors as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>From</td>
-                            <td>
-                                <input type="date" class="form-control" style="width: 170px;" name="period"
-                                    value="{{ request('period') ?? now()->format('Y-m-d') }}" class="form-control">
-                            </td>
-                            <td>To</td>
-                            <td>
-                                <input type="date" class="form-control" style="width: 170px;" name="sana"
-                                    value="{{ request('sana') ?? now()->format('Y-m-d') }}" class="form-control">
-                            </td>
-                            <td>
-                                <button class="btn btn-primary" type="submit"> <i class="fas fa-filter"></i>
-                                    Filter</button>
-                            </td>
-                        </tr>
+                        <form action="{{route('temps')}}" method="get">
+                            <tr>
+                                <td>
+                                    <select class="js-example-basic-single" id="select_done" name="sector_id"
+                                        style="width: 300px">
+                                        <option value="">All</option>
+                                        @foreach ($sectors as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if ($item->id == request('sector_id'))
+                                                    selected
+                                                @endif
+                                                >{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>From</td>
+                                <td>
+                                    <input type="date" class="form-control" style="width: 170px;" name="date1"
+                                        value="{{ request('date1') ?? now()->format('Y-m-d') }}" class="form-control">
+                                </td>
+                                <td>To</td>
+                                <td>
+                                    <input type="date" class="form-control" style="width: 170px;" name="date2"
+                                        value="{{ request('date2') ?? now()->format('Y-m-d') }}" class="form-control">
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" type="submit"> <i class="fas fa-filter"></i>
+                                        Filter</button>
+                                </td>
+                            </tr>
+                        </form>
                     </tbody>
                 </table>
             </div>
@@ -75,7 +81,7 @@
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="table-responsive">
                             <div class="customer-scroll">
-                                <table class="table table-hover m-b-0">
+                                <table class="table table-sm m-b-0">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -89,7 +95,7 @@
 
                                         @foreach ($temps as $temp)
                                             <tr>
-                                                <td>{{(($temps->currentPage() * 10) - 10) + $loop->index + 1}}</td>
+                                                <td>{{(($temps->currentPage() * request('paginate')) - request('paginate')) + $loop->index + 1}}</td>
                                                 <td><strong>{{ $temp->sector->name }}</strong></td>
                                                 <td>{{ $temp->temp }} °C </td>
                                                 <td>{{ $temp->updated_at->format('Y-m-d') }} </td>
@@ -98,11 +104,20 @@
                                         @endforeach
 
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th><span>Sectors</span></th>
+                                            <th><span>Temprature <a class="help"></a></span></th>
+                                            <th><span>Date <a class="help"></a></span></th>
+                                            <th><span>Time<a class="help"></a></span></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             
-                            <div class="row container">
-                                <div class="col d-flex justify-content mt-3">
+                            <div class="row container mb-3">
+                                <div class="col d-flex justify-content">
                                     <h6 class="mt-2 mr-2">Show</h6>
                                     <select class="form-control" style="width: 80px" name="select_paginate" id="select_paginate">
                                         <option value="10" @if (request('paginate') == 10) selected @endif>10</option>
@@ -111,7 +126,7 @@
                                         <option value="{{$temps->count()}}" @if (request('paginate') == $temps->count()) selected @endif>All</option>
                                     </select> <h6 class="mt-2 ml-2">entries</h6>
                                 </div>
-                                <div class="col d-flex justify-content-end mt-3">
+                                <div class="col d-flex justify-content-end">
                                     {{ $temps->withQueryString()->links() }}
                                 </div>
                                 @push('scripts')
