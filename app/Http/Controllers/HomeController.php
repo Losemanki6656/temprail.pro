@@ -31,7 +31,7 @@ class HomeController extends Controller
         $organizations = Organization::all();
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
         
-        $maxTemps = Temp::orderBy('temp','asc')->get();
+        $maxTemps = Temp::orderBy('temp','desc')->get();
 
         $temps = Temp::with('sector')->get();
 
