@@ -61,7 +61,7 @@ class HomeController extends Controller
         })->when(request('date2'), function ( $query, $date2) {
             return $query->where('created_at','<=', $date2);
 
-        })->with('sector');
+        })->orderBy('created_at','asc')->with('sector');
 
         $sectors = Sector::
         where('organization_id',$org_id)->get();
