@@ -27,5 +27,5 @@ Route::post('temppch', function (Request $request) {
     $temps->temp = $request->temp;
     $temps->save();
     
-    return $request->id;
+    return response()->json(['message' => 'success'], 200);
 });
