@@ -115,4 +115,13 @@ class HomeController extends Controller
             'sectors' => $sectors
         ]);
     }
+
+    public function demo()
+    {
+        $items = Temp::get();
+        
+        return view('demo',[
+            'items' => $items
+        ]);
+    }
 }

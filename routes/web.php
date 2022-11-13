@@ -21,3 +21,6 @@ Route::get('/temps', [App\Http\Controllers\HomeController::class, 'temps'])->nam
 Route::get('/statistics', [App\Http\Controllers\HomeController::class, 'static'])->name('static');
 Route::get('/main', [App\Http\Controllers\HomeController::class, 'main'])->name('main');
 Route::get('/export', [App\Http\Controllers\HomeController::class, 'export'])->name('export');
+
+
+Route::get('/demo', [App\Http\Controllers\HomeController::class, 'demo'])->name('demo');

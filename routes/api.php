@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Temp;
+use App\Models\TestDemo;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +29,13 @@ Route::post('temppch', function (Request $request) {
     $temps->save();
     
     return 7;
+});
+
+Route::post('test', function (Request $request) {
+    
+    $temps = new TestDemo();
+    $temps->testdemo = $request->userid;
+    $temps->save();
+    
+    return response()->json(7);
 });
