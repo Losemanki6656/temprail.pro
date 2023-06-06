@@ -26,6 +26,7 @@ Route::post('temppch', function (Request $request) {
     $temps->organization_id = $request->userid;
     $temps->sector_id = $request->id;
     $temps->temp = $request->temp ?? 0;
+    $temps->temp2 = $request->temp2 ?? 0;
     $temps->save();
     
     return 7;

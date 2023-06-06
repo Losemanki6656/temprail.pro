@@ -87,6 +87,7 @@
                                             <th>#</th>
                                             <th><span>Sectors</span></th>
                                             <th><span>Temprature <a class="help"></a></span></th>
+                                            <th><span>Temprature 2<a class="help"></a></span></th>
                                             <th><span>Date <a class="help"></a></span></th>
                                             <th><span>Time<a class="help"></a></span></th>
                                         </tr>
@@ -98,6 +99,7 @@
                                                 <td>{{(($temps->currentPage() * request('paginate')) - request('paginate')) + $loop->index + 1}}</td>
                                                 <td><strong>{{ $temp->sector->name }}</strong></td>
                                                 <td>{{ $temp->temp }} °C </td>
+                                                <td>{{ $temp->temp2 }} °C </td>
                                                 <td>{{ $temp->updated_at->format('Y-m-d') }} </td>
                                                 <td>{{ $temp->updated_at->format('H:i:s') }} </td>
                                             </tr>
@@ -109,6 +111,7 @@
                                             <th>#</th>
                                             <th><span>Sectors</span></th>
                                             <th><span>Temprature <a class="help"></a></span></th>
+                                            <th><span>Temprature 2<a class="help"></a></span></th>
                                             <th><span>Date <a class="help"></a></span></th>
                                             <th><span>Time<a class="help"></a></span></th>
                                         </tr>
