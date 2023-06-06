@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/temppch', [App\Http\Controllers\TempController::class, 'create']);
 Route::post('/temppch', [App\Http\Controllers\TempController::class, 'create']);
+Route::get('/test', [App\Http\Controllers\TempController::class, 'test']);
+Route::post('/test', [App\Http\Controllers\TempController::class, 'test']);
 
 // Route::get('temppch', function (Request $request) {
     

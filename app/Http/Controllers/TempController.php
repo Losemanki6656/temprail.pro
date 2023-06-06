@@ -22,4 +22,12 @@ class TempController extends Controller
             'message' => 'success'
         ]);
     }
+
+    public function create(Request $request)
+    {
+        
+        return response()->json([
+            'message' => 'success'
+        ]);
+    }
 }
