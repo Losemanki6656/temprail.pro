@@ -20,26 +20,36 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('temppch', function (Request $request) {
-    
-    $temps = new Temp();
-    $temps->organization_id = $request->userid;
-    $temps->sector_id = $request->id;
-    $temps->temp = $request->temp ?? 0;
-    $temps->temp2 = $request->temp2 ?? 0;
-    $temps->save();
-    
-    return response()->json([
-        'message' => 'success'
-    ]);
+Route::get('/temppch', [App\Http\Controllers\TempController::class, 'create']);
+Route::post('/temppch', [App\Http\Controllers\TempController::class, 'create']);
 
-});
+// Route::get('temppch', function (Request $request) {
+    
+    
 
-Route::post('test', function (Request $request) {
+// });
+
+
+// Route::post('temppch', function (Request $request) {
     
-    $temps = new TestDemo();
-    $temps->testdemo = $request->userid;
-    $temps->save();
+//     $temps = new Temp();
+//     $temps->organization_id = $request->userid;
+//     $temps->sector_id = $request->id;
+//     $temps->temp = $request->temp ?? 0;
+//     $temps->temp2 = $request->temp2 ?? 0;
+//     $temps->save();
     
-    return response()->json(7);
-});
+//     return response()->json([
+//         'message' => 'success'
+//     ]);
+
+// });
+
+// Route::post('test', function (Request $request) {
+    
+//     $temps = new TestDemo();
+//     $temps->testdemo = $request->userid;
+//     $temps->save();
+    
+//     return response()->json(7);
+// });
