@@ -29,9 +29,9 @@ Route::post('temppch', function (Request $request) {
     $temps->temp2 = $request->temp2 ?? 0;
     $temps->save();
     
-    return response()->json(
+    return response()->json([
         'message' => 'success'
-    );
+    ]);
 
 });
 
