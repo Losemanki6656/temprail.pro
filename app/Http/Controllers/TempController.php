@@ -23,9 +23,15 @@ class TempController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function test(Request $request)
     {
-        
+        $temps = new Temp();
+        $temps->organization_id = 3;
+        $temps->sector_id = 16;
+        $temps->temp = -1;
+        $temps->temp2 = -1;
+        $temps->save();
+
         return response()->json([
             'message' => 'success'
         ]);
