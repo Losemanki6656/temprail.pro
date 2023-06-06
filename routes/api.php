@@ -29,7 +29,10 @@ Route::post('temppch', function (Request $request) {
     $temps->temp2 = $request->temp2 ?? 0;
     $temps->save();
     
-    return 7;
+    return response()->json(
+        'message' => 'success'
+    );
+
 });
 
 Route::post('test', function (Request $request) {
