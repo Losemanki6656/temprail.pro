@@ -247,7 +247,7 @@
                                 callbacks: {
                                     label: function(r) {
                                         return r.dataset.label + ": " + r.parsed.y +
-                                            " Customers"
+                                            " °C"
                                     }
                                 }
                             }
