@@ -103,6 +103,14 @@
                                 {{-- <span class="nav-main-link-badge badge rounded-pill bg-primary">8</span> --}}
                             </a>
                         </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ url()->current() == route('sectors') ? 'active' : '' }}"
+                                href="{{ route('sectors') }}">
+                                <i class="nav-main-link-icon fa fa-sitemap"></i>
+                                <span class="nav-main-link-name">Пикеты (км) Секторы</span>
+                                {{-- <span class="nav-main-link-badge badge rounded-pill bg-primary">8</span> --}}
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <!-- END Side Navigation -->
@@ -288,6 +296,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="{{ asset('assets/js/dashmix.app.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/chart.js/chart.min.js') }}"></script>
+    <script src="{{asset('assets/js/pages/be_ui_animations.min.js')}}"></script>
     @yield('scripts')
     @stack('scripts')
     <script>

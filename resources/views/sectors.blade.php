@@ -1,108 +1,87 @@
-@extends('layouts.master')
+@extends('layouts.master_v2')
 
 @section('content')
-    <div class="col">
-        <form action="{{ route('export') }}" method="get" id="form1">
-            @csrf
-            <div class="card table-card">
-                <div class="card-header">
-                    <h5>Select sector</h5>
-                    <div class="card-header-right">
-                        <div class="btn-group card-option">
-                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="feather icon-more-horizontal"></i>
-                            </button>
-                            <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
-                                <li class="dropdown-item full-card"><a href="#!"><span><i class="feather icon-maximize"></i>
-                                            maximize</span><span style="display:none"><i class="feather icon-minimize"></i>
-                                            Restore</span></a></li>
-                                <li class="dropdown-item minimize-card"><a href="#!"><span><i
-                                                class="feather icon-minus"></i> collapse</span><span style="display:none"><i
-                                                class="feather icon-plus"></i> expand</span></a></li>
-                                <li class="dropdown-item reload-card"><a href="#!"><i class="feather icon-refresh-cw"></i>
-                                        reload</a></li>
-                                <li class="dropdown-item"><a href="javascript:;"
-                                        onclick="document.getElementById('form1').submit();"><i
-                                            class="feather icon-file-text"></i> Export</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <select class="selectpicker form-control" id="select_done" name="sel_done" data-container="body"
-                                data-live-search="true">
-                                <option value=" ">All</option>
-                                @foreach ($sectors as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label for="otdateinput"> from</label>
-                            <input type="date" id="otdateinput" name="otdata">
-                            <label for="dodateinput"> to</label>
-                            <input type="date" id="dodateinput" name="dodata">
-                            <button type="button" class="btn btn-primary" id="dates"><i
-                                    class="mr-2 bi bi-funnel"></i>Filter</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                            aria-labelledby="pills-home-tab">
-                            <div class="table-responsive">
-                                <div class="customer-scroll">
-                                    <table class="table table-hover m-b-0">
-                                        <thead>
-                                            <tr>
-                                                <th><span>Sectors</span></th>
-                                                <th><span>Temprature <a class="help"></a></span></th>
-                                                <th><span>Date <a class="help"></a></span></th>
-                                                <th><span>Time<a class="help"></a></span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($sectors as $temp)
-                                                <tr>
-                                                    <td><strong>{{ $temp->okolotka($temp->okolotok_id) }}</strong></td>
-                                                    <td>{{ $temp->temp }} °C </td>
-                                                    <td>{{ $temp->updated_at->format('Y-m-d') }} </td>
-                                                    <td>{{ $temp->updated_at->format('H:i:s') }} </td>
-                                                </tr>
-                                            @endforeach
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-grow-1 fs-3 fw-semibold">Пикеты (км) Секторы</h1>
+                <nav class="flex-shrink-0 ms-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Главная страница</li>
+                        <li class="breadcrumb-item active" aria-current="page">Пикеты (км) Секторы</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
 
-                                        </tbody>
-                                    </table>
+    <!-- Page Content -->
+
+    <div class="content">
+        <!-- Full Table -->
+        <div class="block block-rounded">
+            <div class="block-content">
+                <h2 class="content-heading mb-3">Пикеты (км) Секторы</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-vcenter">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Сектор</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($sectors as $item)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}
+                                    </td>
+                                    <td>{{ $item->name }}</td>
+                                    <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#update{{$item->id}}"><i class="fa fa-edit"></i>
+                                            Редактировать</button> </td>
+                                </tr>
+                                <div class="modal fade" id="update{{$item->id}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modal-block-popin" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-popin" role="document">
+                                        <div class="modal-content">
+                                            <div class="block block-rounded block-themed block-transparent mb-0">
+                                                <div class="block-header bg-primary-dark">
+                                                    <h3 class="block-title">Редактировать</h3>
+                                                    <div class="block-options">
+                                                        <button type="button" class="btn-block-option"
+                                                            data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="fa fa-fw fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="block-content">
+                                                    <form id="form" action="{{route('sector_update', ['id' => $item->id])}}" method="POST">
+                                                        @csrf
+                                                        <p>
+                                                            <input class="form-control" type="text" value="{{$item->name}}" name="name" required>
+                                                        </p>
+                                                    </form>
+                                                </div>
+                                                <div class="block-content block-content-full text-end bg-body">
+                                                    <button type="button" class="btn btn-sm btn-alt-secondary"
+                                                        data-bs-dismiss="modal">Назад</button>
+                                                    <button type="submit" class="btn btn-sm btn-primary" form="form"><i class="fa fa-save"></i> Сохранить</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endforeach
 
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+        <!-- END Full Table -->
     </div>
-    <nav aria-label="Page navigation example text-center">
-        <ul class="pagination">
-
-        </ul>
-    </nav>
-@endsection
-
-@section('after_scripts')
-    <script>
-        let debounce = null;
-        $("#dates").click(function() {
-            clearTimeout(debounce);
-            debounce = setTimeout(() => {
-                let s = $('#otdateinput').val();
-                let a = $('#dodateinput').val();
-                let q = $('#select_done').val();
-                $.get("{{ route('main') }}?s=" + s + "&a=" + a + "&q=" + q, function(response) {
-                    $('#includes_table').html(response);
-                });
-            }, 500);
-        });
-    </script>
 @endsection

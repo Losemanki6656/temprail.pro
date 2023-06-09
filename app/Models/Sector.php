@@ -9,6 +9,8 @@ class Sector extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function temps()
     {
         return $this->hasMany(Temp::class);
