@@ -8,6 +8,7 @@ use App\Models\UserOrganization;
 use App\Models\Sector;
 use App\Models\Organization;
 use Auth;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -28,21 +29,103 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $organizations = Organization::all();
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
         
-        $maxTemps = Temp::orderBy('temp','desc')->get();
+        $maxTemp = Temp::where('organization_id', $org_id)
+            ->where('created_at', '>=', Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d'))
+            ->orderBy('temp','desc')->with('sector')
+            ->first();
+        $minTemp = Temp::where('organization_id', $org_id)
+            ->where('created_at', '>=', Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d'))
+            ->orderBy('temp','asc')->with('sector')
+            ->first();
 
-        $temps = Temp::with('sector')->get();
+        $LastmaxTemp = Temp::where('organization_id', $org_id)
+            ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+            ->orderBy('temp','desc')->with('sector')->first();
+        $LastminTemp = Temp::where('organization_id', $org_id)
+            ->whereBetween('created_at', [Carbon::now()->subMonth()->startOfMonth(), Carbon::now()->subMonth()->endOfMonth()])
+            ->orderBy('temp','asc')->with('sector')->first();
 
-        $sectors = Sector::
-        where('organization_id',$org_id)->get();
+        $dMax = (double)$maxTemp->temp ?? 0 - (double)$LastmaxTemp->temp ?? 0; 
+        $dMin = (double)$minTemp->temp ?? 0 - (double)$LastminTemp->temp ?? 0; 
+    
+        $date_chart = request('date_chart', now()->format('Y-m-d'));
+
+        $sectors = Sector::where('organization_id', $org_id)
+            ->with([
+                'temps' => function ($q) use ($date_chart) {
+                    $q->whereDate('created_at', $date_chart);
+                }
+            ])
+            ->get();
+
+        $onlineSectorsCount = Temp::where('organization_id', $org_id)
+            ->where('created_at', '>=', Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d'))
+            ->select('sector_id')
+            ->groupBy('sector_id')
+            ->get()->count();
+
+        $series = []; $allTemps = 0; $maxChartTemp = 0; $minChartTemp = 120; $timeMaxTemp = '';
+        foreach($sectors as $item)
+        {
+            $data = [];
+            for($i = 0; $i <= 23; $i++) {
+                $summTemp = 0; $x = 0;
+                foreach($item->temps as $temp)
+                {
+                    $q = (double)$temp->temp;
+                    if( (int)$temp->created_at->format('H') == $i) {
+                        if($maxChartTemp < $q) {
+                            $maxChartTemp = $q; 
+                            $timeMaxTemp = $temp->created_at->format('H:i');
+                        }
+                        if($minChartTemp > $q) $minChartTemp = $q;
+                        $summTemp += $q;
+                        $x++;
+                    }
+                }
+                if($x != 0) {
+                    $allTemps += $x;
+                    $t = (double)number_format($summTemp/$x, 2, '.', '.');
+                    $data[] = $t;
+                } else $data[] = 0;
+            }
+
+            $series[] = [
+                "label" => $item->name,
+                "fill" => !0,
+                "backgroundColor" => "rgba(6, 101, 208, .6)",
+                "borderColor" => "transparent",
+                "pointBackgroundColor" => "rgba(6, 101, 208, 1)",
+                "pointBorderColor"  => "#fff",
+                "pointHoverBackgroundColor" => "#fff",
+                "pointHoverBorderColor" => "rgba(6, 101, 208, 1)",
+                'data' => $data
+            ];
+        }
+
+        $categories = [];
+        for($i = 0; $i <= 23; $i++) {
+            $c = str_pad((string)$i, 2, '0', STR_PAD_LEFT);
+            $categories[] = "'$c'";
+        }
+
+        if($minChartTemp == 120) $maxChartTemp = 0;
 
         return view('home',[
-            'temps' => $temps,
             'sectors' => $sectors,
-            'organizations' => $organizations,
-            'maxTemps' => $maxTemps
+            'maxTemp' => $maxTemp,
+            'minTemp' => $minTemp,
+            'dMax' => $dMax,
+            'dMin' => $dMin,
+            'onlineSectorsCount' => $onlineSectorsCount,
+            'categories' => $categories,
+            'series' => json_encode($series, true),
+            'allTemps' => $allTemps,
+            'maxChartTemp' => $maxChartTemp,
+            'minChartTemp' => $minChartTemp,
+            'timeMaxTemp' => $timeMaxTemp
         ]);
     }
 
@@ -51,24 +134,22 @@ class HomeController extends Controller
         $org_id = UserOrganization::where('user_id', Auth::user()->id)->value('organization_id');
         
         $temps = Temp::query()
-        ->where('organization_id', $org_id)
-        ->when(request('sector_id'), function ( $query, $sector_id) {
-            return $query->where('sector_id', $sector_id);
+            ->where('organization_id', $org_id)
+            ->when(request('sector_select'), function ( $query, $sector_select) {
+                return $query->where('sector_id', $sector_select);
 
-        })->when(request('date1'), function ( $query, $date1) {
-            return $query->where('created_at','>=', $date1);
+            })->when(request('date1'), function ( $query, $date1) {
+                return $query->where('created_at','>=', $date1);
 
-        })->when(request('date2'), function ( $query, $date2) {
-            return $query->where('created_at','<=', $date2);
+            })->when(request('date2'), function ( $query, $date2) {
+                return $query->where('created_at','<=', $date2);
 
-        })->orderBy('created_at','desc')->with('sector');
+            })->orderBy('created_at','desc')->with('sector');
 
-        $sectors = Sector::
-        where('organization_id',$org_id)->get();
+            $sectors = Sector::where('organization_id', $org_id)->get();
 
-        if($request->paginate) $paginate = $request->paginate; else $paginate = 10;
         return view('temps',[
-            'temps' => $temps->paginate($paginate),
+            'temps' => $temps->paginate(request('paginate_select',10)),
             'sectors' => $sectors
         ]);
     }
@@ -79,7 +160,7 @@ class HomeController extends Controller
         if($request->date_stat) $date_stat = $request->date_stat; else $date_stat = now()->format('Y-m-d');
 
         $temps = Temp::where('organization_id', $org_id)
-        ->whereDate('created_at','=',$date_stat)->get();
+            ->whereDate('created_at','=',$date_stat)->get();
 
         $categories = [];
         for($i = 0; $i <= 23; $i++) {
