@@ -63,7 +63,7 @@
                         <div class="item rounded-3 bg-body mx-auto my-3">
                             <i class="fa fa-temperature-arrow-up fa-lg text-primary"></i>
                         </div>
-                        <div class="fs-1 fw-bold"> {{ number_format($maxTemp->temp, 2, '.', '.') }} °C</div>
+                        <div class="fs-1 fw-bold"> {{ number_format($maxTemp->temp ?? 0, 2, '.', '.') }} °C</div>
                         <div class="text-muted mb-3">Максимальная температура</div>
                         @if ($dMax >= 0)
                             <div
@@ -93,7 +93,7 @@
                         <div class="item rounded-3 bg-body mx-auto my-3">
                             <i class="fa fa-temperature-arrow-down fa-lg text-primary"></i>
                         </div>
-                        <div class="fs-1 fw-bold">{{ number_format($minTemp->temp, 2, '.', '.') }} °C</div>
+                        <div class="fs-1 fw-bold">{{ number_format($minTemp->temp ?? 0, 2, '.', '.') }} °C</div>
                         <div class="text-muted mb-3">Минимальная температура</div>
                         @if ($dMin >= 0)
                             <div
@@ -181,26 +181,28 @@
                     <div class="col-md-2 col-xl-2 d-md-flex align-items-md-center">
                         <div class="p-md-2 p-lg-3">
                             <div class="py-3">
-                                <div class="fs-1 fw-bold">{{$allTemps}}</div>
+                                <div class="fs-1 fw-bold">{{ $allTemps }}</div>
                                 <div class="fw-semibold">Количество входящих данных в этот день.</div>
                                 <div class="py-3 d-flex align-items-center">
                                     <div class="bg-success-light p-2 rounded me-3">
                                         <i class="fa fa-fw fa-arrow-up text-success"></i>
                                     </div>
                                     <p class="mb-0">
-                                        Максимальная температура <span class="fw-semibold text-success"> {{ $maxChartTemp }} °C</span>
+                                        Максимальная температура <span class="fw-semibold text-success">
+                                            {{ $maxChartTemp }} °C</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="py-3">
-                                <div class="fs-1 fw-bold">{{$timeMaxTemp}}</div>
+                                <div class="fs-1 fw-bold">{{ $timeMaxTemp }}</div>
                                 <div class="fw-semibold">Время максимальной температуры</div>
                                 <div class="py-3 d-flex align-items-center">
                                     <div class="bg-success-light p-2 rounded me-3">
                                         <i class="fa fa-fw fa-arrow-down text-success"></i>
                                     </div>
                                     <p class="mb-0">
-                                        Минимальная температура <span class="fw-semibold text-success"> {{ $minChartTemp }} °C</span> 
+                                        Минимальная температура <span class="fw-semibold text-success">
+                                            {{ $minChartTemp }} °C</span>
                                     </p>
                                 </div>
                             </div>

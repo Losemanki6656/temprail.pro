@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-12">
                                 <input type="date" class="form-control" name="date1" id="date1"
-                                    value="{{ request('date1')}}">
+                                    value="{{ request('date1') }}">
                             </div>
                             <div class="col-12">
                                 <input type="date" class="form-control" name="date2" id="date2"
@@ -90,7 +90,7 @@
                     </table>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-md-6 space-y-2">
+                    <div class="col-md-6 space-y-2 mb-2">
                         <select class="form-select" style="width: 80px" name="paginate_select" id="paginate_select">
                             <option value="10" @if ($temps->perPage() == 10) selected @endif>10
                             </option>
@@ -103,7 +103,8 @@
                             </option>
                         </select>
                     </div>
-                    <div class="col-md-6 text-end"> <label for="">{{ $temps->withQueryString()->links() }}</label>
+                    <div class="col-md-6 text-end"> <label
+                            for="">{{ $temps->onEachSide(1)->withQueryString()->links() }}</label>
                     </div>
                 </div>
             </div>
